@@ -369,6 +369,19 @@ test('too many evaluation steps is a clear error, never a hang', () => {
   assert.ok(Date.now() - t0 < 2000);
 });
 
+test('LIKE has no catastrophic backtracking, and long LIKE work counts toward the step limit', () => {
+  const t: Table[] = [{ name: 't', columns: ['s'], rows: [['a'.repeat(40)]] }];
+  const t0 = Date.now();
+  assert.deepEqual(rows(`SELECT s LIKE '${'%a'.repeat(30)}%b' FROM t`, t), [[0]]);
+  assert.deepEqual(rows(`SELECT s LIKE '${'%a'.repeat(30)}%' FROM t`, t), [[1]]);
+  assert.ok(Date.now() - t0 < 500);
+  const w: Table[] = [...big, { name: 'w', columns: ['s'], rows: [['a'.repeat(40)]] }];
+  const long = 's' + ' || s'.repeat(299); // 12,000 characters per row
+  const t1 = Date.now();
+  assert.match(err(`SELECT count(*) FROM n, w WHERE (${long}) LIKE '${'%a'.repeat(200)}%b'`, w), /too expensive/);
+  assert.ok(Date.now() - t1 < 2000);
+});
+
 test('limits can be tightened by the caller', () => {
   assert.throws(() => runQuery('SELECT * FROM n', big, { maxRows: 10, maxSteps: 1_000_000 }), /more than 10 intermediate rows/);
   assert.throws(() => runQuery('SELECT v + 1 FROM n', big, { maxRows: 10_000, maxSteps: 50 }), /more than 50 evaluation steps/);

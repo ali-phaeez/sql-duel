@@ -90,25 +90,41 @@ export function logicalNot(a: boolean | null): Value {
   return a === null ? null : a ? 0 : 1;
 }
 
-const likeCache = new Map<string, RegExp>();
+/**
+ * Wildcard match without regular expressions (no catastrophic backtracking): % is any run, _ is one character.
+ * Greedy with a single backtrack point, so the work is at most |text| x |pattern| character steps.
+ */
+function wildcardMatch(text: string[], pattern: string[]): boolean {
+  let t = 0;
+  let p = 0;
+  let starP = -1;
+  let starT = 0;
+  while (t < text.length) {
+    if (p < pattern.length && (pattern[p] === '_' || (pattern[p] !== '%' && pattern[p] === text[t]))) {
+      t++;
+      p++;
+    } else if (p < pattern.length && pattern[p] === '%') {
+      starP = p++;
+      starT = t;
+    } else if (starP >= 0) {
+      p = starP + 1;
+      t = ++starT;
+    } else return false;
+  }
+  while (p < pattern.length && pattern[p] === '%') p++;
+  return p === pattern.length;
+}
 
 /** LIKE: % matches any run of characters, _ matches one character. Case-insensitive. */
 export function like(value: Value, pattern: Value): Value {
   if (value === null || pattern === null) return null;
-  const p = String(pattern);
-  let re = likeCache.get(p);
-  if (!re) {
-    let src = '^';
-    for (const ch of p) {
-      if (ch === '%') src += '[\\s\\S]*';
-      else if (ch === '_') src += '[\\s\\S]';
-      else src += ch.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&');
-    }
-    re = new RegExp(src + '$', 'iu');
-    if (likeCache.size > 200) likeCache.clear();
-    likeCache.set(p, re);
-  }
-  return re.test(String(value)) ? 1 : 0;
+  return wildcardMatch(Array.from(String(value).toLowerCase()), Array.from(String(pattern).toLowerCase())) ? 1 : 0;
+}
+
+/** Evaluation steps charged for one LIKE, so long strings against long patterns hit the step limit instead of the CPU. */
+export function likeCost(value: Value, pattern: Value): number {
+  if (value === null || pattern === null) return 0;
+  return Math.ceil((String(value).length * String(pattern).length) / 100);
 }
 
 /** x IN (list) with SQL NULL rules: no match and a NULL in the list (or x NULL) gives NULL. */

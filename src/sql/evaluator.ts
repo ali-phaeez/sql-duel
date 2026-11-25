@@ -9,7 +9,7 @@ import type { Expr, Select } from './ast.ts';
 import { errorAt, SqlError } from './errors.ts';
 import type { Pos } from './errors.ts';
 import {
-  AGGREGATES, arithmetic, between, bool, callAggregate, callScalar, compareOp, inList, like,
+  AGGREGATES, arithmetic, between, bool, callAggregate, callScalar, compareOp, inList, like, likeCost,
   logicalAnd, logicalNot, logicalOr, negate, SCALARS, truth,
 } from './functions.ts';
 import { parse } from './parser.ts';
@@ -230,7 +230,10 @@ class Machine {
         return arithmetic(b.op, l, r, b.pos);
       }
       case 'like': {
-        const v = like(this.eval(b.e, row, group), this.eval(b.p, row, group));
+        const value = this.eval(b.e, row, group);
+        const pattern = this.eval(b.p, row, group);
+        this.tick(likeCost(value, pattern));
+        const v = like(value, pattern);
         return b.not ? logicalNot(v === null ? null : v === 1) : v;
       }
       case 'in': {
