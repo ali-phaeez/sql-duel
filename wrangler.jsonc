@@ -1,0 +1,16 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "sql-duel",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-09-01",
+  // Emits the browser copy of the SQL engine (public/engine) before every dev session and deploy.
+  "build": { "command": "npm run build", "watch_dir": "src/sql" },
+  // Static client files. Any path without a matching file (e.g. /ws/ABCD, /api/*) falls through to the Worker.
+  "assets": { "directory": "./public" },
+  // One Durable Object per room. SQLite-backed classes are the ones available on the free plan.
+  "durable_objects": {
+    "bindings": [{ "name": "ROOM", "class_name": "RoomDO" }]
+  },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["RoomDO"] }],
+  "observability": { "enabled": true }
+}

@@ -1,0 +1,25 @@
+{
+  "name": "sql-duel",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "SQL Duel: a 2-8 player party game. Everyone sees the same tables and target result; the first correct SELECT wins the round.",
+  "scripts": {
+    "dev": "wrangler dev --port 8797",
+    "build": "tsc -p tsconfig.engine.json",
+    "deploy": "wrangler deploy",
+    "types": "wrangler types",
+    "typecheck": "tsc -p tsconfig.json && tsc -p tsconfig.test.json",
+    "test": "node --test test/*.test.ts",
+    "test:e2e": "playwright test",
+    "sql": "node tools/sql.ts",
+    "puzzles": "node tools/build-pack.ts",
+    "tail": "wrangler tail"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.56.1",
+    "@types/node": "^26.6.2",
+    "typescript": "^7.0.2",
+    "wrangler": "^4.138.0"
+  }
+}

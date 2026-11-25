@@ -1,0 +1,8 @@
+node_modules/
+.wrangler/
+.dev.vars
+test-results/
+playwright-report/
+.DS_Store
+# Browser copy of the SQL engine, emitted from src/sql by `npm run build` (wrangler runs it before dev and deploy).
+public/engine/
