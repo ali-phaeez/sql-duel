@@ -5,7 +5,7 @@ import { pickPuzzles, publicPuzzle } from './puzzles.ts';
 import type { DifficultyFilter, Puzzle } from './puzzles.ts';
 import { DIFFICULTY_FILTERS } from './puzzles.ts';
 import {
-  IDLE_MS, LOBBY_PRUNE_MS, MAX_PLAYERS, NAME_MAX, PLACE_POINTS, ROUND_COUNTS, ROUND_END_MS, ROUND_MS,
+  IDLE_MS, LOBBY_PRUNE_MS, MAX_PLAYERS, NAME_MAX, PLACE_POINTS, RECONNECT_GRACE_MS, ROUND_COUNTS, ROUND_END_MS, ROUND_MS,
   SHORTEST_BONUS, SUBMIT_GAP_MS,
 } from './protocol.ts';
 import type {
@@ -176,10 +176,15 @@ export function nextRound(state: RoomState, now: number): void {
   }
 }
 
-/** Ends the round early when every connected player has solved it. */
+/** Connected players, plus those who dropped less than RECONNECT_GRACE_MS ago (they are probably reloading). */
+export function presentPlayers(state: RoomState, now: number): Player[] {
+  return state.players.filter((p) => p.connected || now - p.lastSeen < RECONNECT_GRACE_MS);
+}
+
+/** Ends the round early when every present player has solved it. */
 export function maybeEndEarly(state: RoomState, now: number): boolean {
   if (state.phase !== 'round') return false;
-  const online = connectedPlayers(state);
+  const online = presentPlayers(state, now);
   if (online.length === 0) return false;
   if (!online.every((p) => state.attempts[p.id]?.solvedAt != null)) return false;
   endRound(state, now);
@@ -195,6 +200,7 @@ export function advance(state: RoomState, now: number): boolean {
     else state.phaseEndsAt = null;
     changed = true;
   }
+  if (maybeEndEarly(state, now)) changed = true; // a dropped player's grace period ran out
   return changed;
 }
 
@@ -361,10 +367,16 @@ export function isExpired(state: RoomState, now: number): boolean {
   return state.idleSince !== null && now >= state.idleSince + IDLE_MS;
 }
 
-/** Next time the room needs an alarm: a phase deadline, a lobby prune, or idle deletion. */
+/** Next time the room needs an alarm: a phase deadline, a reconnect grace end, a lobby prune, or idle deletion. */
 export function nextDeadline(state: RoomState, now: number): number | null {
   let next = Infinity;
   if (state.phaseEndsAt !== null) next = Math.min(next, state.phaseEndsAt);
+  if (state.phase === 'round') {
+    for (const p of state.players) {
+      const graceEnd = p.lastSeen + RECONNECT_GRACE_MS;
+      if (!p.connected && graceEnd > now && state.attempts[p.id]?.solvedAt == null) next = Math.min(next, graceEnd);
+    }
+  }
   if (state.phase === 'lobby') {
     for (const p of state.players) if (!p.connected) next = Math.min(next, p.lastSeen + LOBBY_PRUNE_MS);
   }

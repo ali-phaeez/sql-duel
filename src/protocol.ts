@@ -11,6 +11,8 @@ export const ROUND_MS = 90_000;
 export const ROUND_END_MS = 15_000;
 export const SUBMIT_GAP_MS = 2_000;
 export const LOBBY_PRUNE_MS = 60_000;
+/** A player who dropped less than this long ago still counts as present (a page reload must not end the round). */
+export const RECONNECT_GRACE_MS = 15_000;
 export const IDLE_MS = 3_600_000;
 export const MAX_MESSAGE_BYTES = 16_384;
 

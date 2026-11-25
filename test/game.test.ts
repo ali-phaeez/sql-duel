@@ -5,7 +5,7 @@ import {
   nextRound, playAgain, prune, ranking, sanitizeName, snapshot, startGame, submit,
 } from '../src/game.ts';
 import { CODE_ALPHABET, generateCode, isValidCode, normalizeCode } from '../src/codes.ts';
-import { IDLE_MS, LOBBY_PRUNE_MS, ROUND_END_MS, ROUND_MS, SUBMIT_GAP_MS } from '../src/protocol.ts';
+import { IDLE_MS, LOBBY_PRUNE_MS, RECONNECT_GRACE_MS, ROUND_END_MS, ROUND_MS, SUBMIT_GAP_MS } from '../src/protocol.ts';
 import type { RoomState } from '../src/protocol.ts';
 import { loadPack } from './helpers/pack.ts';
 
@@ -138,18 +138,23 @@ test('answers for an old round, empty queries and over-long queries are refused'
 test('the round ends early only when every connected player is correct', () => {
   const s = started();
   player(s, 'Cid').connected = false;
+  player(s, 'Cid').lastSeen = T0 - RECONNECT_GRACE_MS;
   submit(s, player(s, 'Ann'), answer(s), 0, T0 + 1000, book);
   assert.equal(s.phase, 'round');
   submit(s, player(s, 'Bob'), answer(s), 0, T0 + 2000, book);
   assert.equal(s.phase, 'round_end');
 });
 
-test('a disconnect can end the round when the rest have solved', () => {
+test('a dropped player counts for a short grace period (a reload), then the round can end without them', () => {
   const s = started();
   submit(s, player(s, 'Ann'), answer(s), 0, T0 + 1000, book);
   submit(s, player(s, 'Bob'), answer(s), 0, T0 + 2000, book);
-  player(s, 'Cid').connected = false;
-  assert.equal(maybeEndEarly(s, T0 + 3000), true);
+  const cid = player(s, 'Cid');
+  cid.connected = false;
+  cid.lastSeen = T0 + 3000;
+  assert.equal(maybeEndEarly(s, T0 + 3000), false, 'Cid may just be reloading');
+  assert.equal(nextDeadline(s, T0 + 3000), T0 + 3000 + RECONNECT_GRACE_MS, 'an alarm re-checks when the grace ends');
+  assert.equal(advance(s, T0 + 3000 + RECONNECT_GRACE_MS), true);
   assert.equal(s.phase, 'round_end');
 });
 
