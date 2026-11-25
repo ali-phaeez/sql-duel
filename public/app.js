@@ -30,7 +30,8 @@ const store = {
   },
 };
 
-const ROUND_MS = 90_000;
+const ROUND_MS = 90_000; // keep in sync with src/protocol.ts
+const ROUND_END_S = 15;
 const PREVIEW_DELAY_MS = 200;
 const PREVIEW_MAX_ROWS = 50;
 
@@ -531,12 +532,12 @@ function updateTimers() {
   const now = serverTime();
   if (r.phase === 'round' && r.round && r.round.endsAt) {
     const left = Math.max(0, r.round.endsAt - now);
-    const secs = Math.ceil(left / 1000);
+    const secs = Math.min(ROUND_MS / 1000, Math.ceil(left / 1000));
     el.timer.textContent = `${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, '0')}`;
     el.timer.classList.toggle('low', secs <= 10);
     el.barFill.style.width = `${Math.min(100, (left / ROUND_MS) * 100)}%`;
   } else if (r.phase === 'round_end' && r.nextAt) {
-    const secs = Math.max(0, Math.ceil((r.nextAt - now) / 1000));
+    const secs = Math.min(ROUND_END_S, Math.max(0, Math.ceil((r.nextAt - now) / 1000)));
     const last = r.round && r.round.index + 1 >= r.round.total;
     el.nextIn.textContent = `${last ? 'Final standings' : 'Next round'} in ${secs} s`;
   }
