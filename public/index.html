@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f1419">
+<title>SQL Duel</title>
+<meta name="description" content="Everyone gets the same tables and the same target result. Write the SELECT that produces it before your friends do. 2 to 8 players, join with a room code.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='4' y='8' width='56' height='48' rx='8' fill='%231c2530'/%3E%3Crect x='4' y='8' width='56' height='12' rx='6' fill='%2338d996'/%3E%3Cpath d='M14 32h36M14 44h36M32 20v36' stroke='%2338d996' stroke-width='3'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<main id="app">
+
+  <!-- HOME -->
+  <section id="screen-home" class="screen narrow" data-testid="screen-home">
+    <div class="hero">
+      <h1 class="logo"><span class="kw">SELECT</span> duel<span class="cursor" aria-hidden="true">_</span></h1>
+      <p class="tagline">Same tables. Same target. Write the query that produces it before your friends do.</p>
+    </div>
+    <label class="field">
+      <span>Your nickname</span>
+      <input id="name" maxlength="12" placeholder="e.g. Ann" autocomplete="nickname" data-testid="name">
+    </label>
+    <button id="create" class="btn primary big" data-testid="create">Create a room</button>
+    <div class="divider"><span>or join one</span></div>
+    <div class="row">
+      <label class="sr-only" for="code">Room code</label>
+      <input id="code" class="code-input" maxlength="4" placeholder="CODE" autocapitalize="characters" autocomplete="off" spellcheck="false" data-testid="code">
+      <button id="join" class="btn big" data-testid="join">Join</button>
+    </div>
+    <p id="home-error" class="error" role="alert" data-testid="error" hidden></p>
+    <p class="fine">2 to 8 players · phones or laptops · no accounts</p>
+    <button class="link" data-open-help>How to play</button>
+  </section>
+
+  <!-- LOBBY -->
+  <section id="screen-lobby" class="screen narrow" data-testid="screen-lobby" hidden>
+    <div class="code-card">
+      <div class="label">Room code</div>
+      <div id="room-code" class="code" data-testid="room-code">····</div>
+      <button id="share" class="btn small">Share link</button>
+    </div>
+    <h2 class="label">Players <span id="player-count"></span></h2>
+    <ul id="players" class="players" aria-label="Players"></ul>
+    <div id="host-controls" hidden>
+      <h2 class="label" id="rounds-label">Rounds</h2>
+      <div class="seg" role="group" aria-labelledby="rounds-label">
+        <button data-rounds="5" data-testid="rounds-5">5</button>
+        <button data-rounds="8" data-testid="rounds-8">8</button>
+        <button data-rounds="12" data-testid="rounds-12">12</button>
+      </div>
+      <h2 class="label" id="difficulty-label">Difficulty</h2>
+      <div class="seg" role="group" aria-labelledby="difficulty-label">
+        <button data-difficulty="easy" data-testid="difficulty-easy">Easy</button>
+        <button data-difficulty="mixed" data-testid="difficulty-mixed">Mixed</button>
+        <button data-difficulty="hard" data-testid="difficulty-hard">Hard</button>
+      </div>
+      <button id="start" class="btn primary big" data-testid="start">Start game</button>
+      <p id="start-hint" class="hint">Waiting for at least 2 players…</p>
+    </div>
+    <p id="waiting" class="hint" hidden>Waiting for <b id="host-name"></b> to start · <span id="settings-summary"></span></p>
+    <div class="spacer"></div>
+    <div class="row center">
+      <button class="link" data-open-help>How to play</button>
+      <button id="leave" class="link">Leave room</button>
+    </div>
+  </section>
+
+  <!-- ROUND -->
+  <section id="screen-round" class="screen wide" data-testid="round" hidden>
+    <header class="round-head">
+      <span id="round-label" class="round-label" data-testid="round-label"></span>
+      <span id="round-difficulty" class="tag"></span>
+      <span class="spacer"></span>
+      <span id="timer" class="timer" data-testid="timer" role="timer" aria-label="Time left"></span>
+    </header>
+    <div class="bar" aria-hidden="true"><div id="bar-fill"></div></div>
+    <div class="round-grid">
+      <div class="col-data">
+        <h2 id="story" class="story" data-testid="story"></h2>
+        <div class="block target">
+          <div class="block-title">Target <span id="ordered-tag" class="tag warn" hidden>order matters</span></div>
+          <div id="target" class="table-wrap" data-testid="target"></div>
+        </div>
+        <div id="tables" class="tables"></div>
+      </div>
+      <div class="col-play">
+        <label class="block-title" for="editor">Your query</label>
+        <textarea id="editor" class="editor" rows="6" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off"
+          placeholder="SELECT …" data-testid="editor"></textarea>
+        <div class="row submit-row">
+          <button id="submit" class="btn primary" data-testid="submit">Submit</button>
+          <span class="kbd-hint"><kbd>Ctrl</kbd>/<kbd>⌘</kbd> + <kbd>Enter</kbd></span>
+        </div>
+        <p id="verdict" class="verdict" role="status" aria-live="polite" data-testid="verdict"></p>
+        <div class="block preview-block">
+          <div class="block-title">Live preview <span id="preview-meta" class="muted"></span></div>
+          <div id="preview" class="table-wrap preview" data-testid="preview"></div>
+        </div>
+        <div class="block">
+          <div class="block-title">Solved so far</div>
+          <ol id="solved" class="solved" data-testid="solved-list"></ol>
+        </div>
+        <div id="scores" class="scores" aria-label="Scores"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ROUND END -->
+  <section id="screen-results" class="screen wide" data-testid="screen-results" hidden>
+    <header class="round-head">
+      <span id="results-label" class="round-label"></span>
+      <span class="spacer"></span>
+      <span id="next-in" class="muted" data-testid="next-in"></span>
+    </header>
+    <h2 id="results-story" class="story"></h2>
+    <div id="results" class="results" data-testid="results"></div>
+    <div class="row center">
+      <button id="next" class="btn primary" data-testid="next" hidden>Next round</button>
+    </div>
+    <div id="results-scores" class="scores" aria-label="Scores"></div>
+  </section>
+
+  <!-- GAME END -->
+  <section id="screen-final" class="screen narrow" data-testid="screen-final" hidden>
+    <h1 class="final-title">Final standings</h1>
+    <ol id="leaderboard" class="leaderboard" data-testid="leaderboard"></ol>
+    <button id="play-again" class="btn primary big" data-testid="play-again" hidden>Play again</button>
+    <p id="final-waiting" class="hint" hidden></p>
+    <details class="last-round">
+      <summary>Last round's answers</summary>
+      <div id="final-results" class="results"></div>
+    </details>
+    <div class="spacer"></div>
+    <button id="leave-final" class="link">Leave room</button>
+  </section>
+
+  <!-- OVERLAYS -->
+  <div id="overlay" class="overlay" hidden><div id="overlay-card" class="card" role="dialog" aria-modal="true"></div></div>
+  <div id="reconnecting" class="overlay light" hidden><div class="card small"><div class="spinner"></div><p>Reconnecting…</p></div></div>
+  <div id="help" class="overlay" hidden>
+    <div class="card help" role="dialog" aria-modal="true" aria-labelledby="help-title">
+      <h2 id="help-title">How to play</h2>
+      <ol class="rules">
+        <li>Each round shows one to three small <b>tables</b> and a <b>target</b> result.</li>
+        <li>Write a <code>SELECT</code> that produces the target. The live preview runs your query as you type.</li>
+        <li>Same columns in the same order, same rows. Column names don't matter. Row order only matters when the puzzle says <b>order matters</b>.</li>
+        <li><b>Submit</b> with the button or <kbd>Ctrl</kbd>/<kbd>⌘</kbd>+<kbd>Enter</kbd>. Wrong tries are fine (one every 2 seconds) but everyone sees how many you made.</li>
+        <li>First correct: <b>5</b> points, second: <b>3</b>, later: <b>1</b>. The shortest correct query of the round gets <b>+1</b>.</li>
+      </ol>
+      <p class="fine">Supported: SELECT, DISTINCT, FROM, JOIN … ON, WHERE, GROUP BY, HAVING, ORDER BY, LIMIT/OFFSET, count/sum/avg/min/max, lower/upper/length/abs/round/coalesce, LIKE, IN, BETWEEN, IS NULL.</p>
+      <button class="btn primary" data-close-help>Got it</button>
+    </div>
+  </div>
+  <div id="toast" class="toast" role="alert" hidden></div>
+</main>
+<script type="module" src="/app.js"></script>
+</body>
+</html>
