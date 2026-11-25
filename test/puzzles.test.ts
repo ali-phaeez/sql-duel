@@ -31,6 +31,15 @@ test('targets do not depend on table row order (no ties under ORDER BY / LIMIT)'
   for (const p of pack.puzzles) assert.doesNotThrow(() => computeTarget(p), p.id);
 });
 
+test('target column names are plain names, never the reference answer\'s expressions', () => {
+  for (const p of pack.puzzles) {
+    for (const c of p.target.columns) assert.match(c, /^[A-Za-z_][A-Za-z0-9_]*$/, `${p.id}: ${c}`);
+  }
+  const leaky: Puzzle = structuredClone(pack.puzzles.find((p) => p.id === 'shop-out-of-stock')!);
+  leaky.answer = 'SELECT count(*) FROM inventory WHERE stock = 0';
+  assert.throws(() => computeTarget(leaky), /shows the answer's expression; add AS <name>/);
+});
+
 test('ordered puzzles really need the order: a shuffled target fails', () => {
   for (const p of pack.puzzles.filter((x) => x.ordered && x.target.rows.length > 1)) {
     const reversed = { columns: p.target.columns, rows: p.target.rows.slice().reverse() };

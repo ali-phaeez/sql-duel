@@ -126,10 +126,10 @@ function clearSession() {
 // ---- tables ----
 function tableHtml(t, caption) {
   const numeric = t.columns.map((_, i) => t.rows.length > 0 && t.rows.every((r) => r[i] === null || typeof r[i] === 'number'));
-  const head = t.columns.map((c) => `<th scope="col">${esc(c)}</th>`).join('');
+  const head = t.columns.map((c, i) => `<th scope="col"${numeric[i] ? ' class="num"' : ''}>${esc(c)}</th>`).join('');
   const body = t.rows
     .map((r) => '<tr>' + r.map((v, i) => {
-      if (v === null) return '<td class="null">NULL</td>';
+      if (v === null) return `<td class="null${numeric[i] ? ' num' : ''}">NULL</td>`;
       return `<td${numeric[i] ? ' class="num"' : ''}>${esc(v)}</td>`;
     }).join('') + '</tr>')
     .join('');

@@ -178,9 +178,9 @@
           ]
         }
       ],
-      "answer": "SELECT count(*) FROM inventory WHERE stock = 0",
+      "answer": "SELECT count(*) AS out_of_stock FROM inventory WHERE stock = 0",
       "target": {
-        "columns": ["count(*)"],
+        "columns": ["out_of_stock"],
         "rows": [
           [3]
         ]
@@ -301,9 +301,9 @@
           ]
         }
       ],
-      "answer": "SELECT order_id, product, qty * unit_price FROM order_lines",
+      "answer": "SELECT order_id, product, qty * unit_price AS line_total FROM order_lines",
       "target": {
-        "columns": ["order_id", "product", "qty * unit_price"],
+        "columns": ["order_id", "product", "line_total"],
         "rows": [
           [101, "Mug", 13],
           [101, "Teapot", 24],
@@ -402,9 +402,9 @@
           ]
         }
       ],
-      "answer": "SELECT category, count(*) FROM products GROUP BY category",
+      "answer": "SELECT category, count(*) AS products FROM products GROUP BY category",
       "target": {
-        "columns": ["category", "count(*)"],
+        "columns": ["category", "products"],
         "rows": [
           ["snacks", 4],
           ["pantry", 3],
@@ -508,9 +508,9 @@
           ]
         }
       ],
-      "answer": "SELECT category, round(avg(price), 2) FROM stationery GROUP BY category",
+      "answer": "SELECT category, round(avg(price), 2) AS avg_price FROM stationery GROUP BY category",
       "target": {
-        "columns": ["category", "round(avg(price), 2)"],
+        "columns": ["category", "avg_price"],
         "rows": [
           ["paper", 2.12],
           ["writing", 1.47],
@@ -542,9 +542,9 @@
           ]
         }
       ],
-      "answer": "SELECT day, sum(qty) FROM sales GROUP BY day HAVING sum(qty) > 20",
+      "answer": "SELECT day, sum(qty) AS items FROM sales GROUP BY day HAVING sum(qty) > 20",
       "target": {
-        "columns": ["day", "sum(qty)"],
+        "columns": ["day", "items"],
         "rows": [
           ["Tue", 23],
           ["Thu", 22]
@@ -583,9 +583,9 @@
           ]
         }
       ],
-      "answer": "SELECT c.name, count(*) FROM classes c JOIN attendance a ON a.class_id = c.id GROUP BY c.name",
+      "answer": "SELECT c.name, count(*) AS people FROM classes c JOIN attendance a ON a.class_id = c.id GROUP BY c.name",
       "target": {
-        "columns": ["name", "count(*)"],
+        "columns": ["name", "people"],
         "rows": [
           ["Spin", 4],
           ["Yoga", 2],
@@ -614,9 +614,9 @@
           ]
         }
       ],
-      "answer": "SELECT dept, max(salary) FROM employees GROUP BY dept",
+      "answer": "SELECT dept, max(salary) AS top_salary FROM employees GROUP BY dept",
       "target": {
-        "columns": ["dept", "max(salary)"],
+        "columns": ["dept", "top_salary"],
         "rows": [
           ["IT", 6100],
           ["Sales", 4400],
@@ -689,9 +689,9 @@
           ]
         }
       ],
-      "answer": "SELECT year - year % 10 AS decade, count(*) FROM books GROUP BY year - year % 10 ORDER BY decade",
+      "answer": "SELECT year - year % 10 AS decade, count(*) AS books FROM books GROUP BY year - year % 10 ORDER BY decade",
       "target": {
-        "columns": ["decade", "count(*)"],
+        "columns": ["decade", "books"],
         "rows": [
           [1930, 2],
           [1960, 2],
@@ -721,9 +721,9 @@
           ]
         }
       ],
-      "answer": "SELECT home, away, home_goals - away_goals FROM matches WHERE home_goals > away_goals",
+      "answer": "SELECT home, away, home_goals - away_goals AS margin FROM matches WHERE home_goals > away_goals",
       "target": {
-        "columns": ["home", "away", "home_goals - away_goals"],
+        "columns": ["home", "away", "margin"],
         "rows": [
           ["Lions", "Hawks", 2],
           ["Lions", "Bears", 1],
@@ -751,9 +751,9 @@
           ]
         }
       ],
-      "answer": "SELECT upper(name), length(name) FROM customers WHERE length(name) > 5",
+      "answer": "SELECT upper(name) AS shout, length(name) AS letters FROM customers WHERE length(name) > 5",
       "target": {
-        "columns": ["upper(name)", "length(name)"],
+        "columns": ["shout", "letters"],
         "rows": [
           ["BARTHOLOMEW", 11],
           ["QUENTIN", 7],
@@ -889,9 +889,9 @@
           ]
         }
       ],
-      "answer": "SELECT m.name, count(DISTINCT b.author) FROM members m JOIN loans l ON l.member_id = m.id JOIN books b ON b.id = l.book_id GROUP BY m.name HAVING count(DISTINCT b.author) > 1",
+      "answer": "SELECT m.name, count(DISTINCT b.author) AS authors FROM members m JOIN loans l ON l.member_id = m.id JOIN books b ON b.id = l.book_id GROUP BY m.name HAVING count(DISTINCT b.author) > 1",
       "target": {
-        "columns": ["name", "count(DISTINCT b.author)"],
+        "columns": ["name", "authors"],
         "rows": [
           ["Maya", 2],
           ["Leo", 2]
@@ -940,9 +940,9 @@
           ]
         }
       ],
-      "answer": "SELECT lg.name, sum(p.goals), count(p.goals) FROM leagues lg JOIN teams t ON t.league_id = lg.id JOIN players p ON p.team_id = t.id GROUP BY lg.name",
+      "answer": "SELECT lg.name, sum(p.goals) AS goals, count(p.goals) AS players_with_goals FROM leagues lg JOIN teams t ON t.league_id = lg.id JOIN players p ON p.team_id = t.id GROUP BY lg.name",
       "target": {
-        "columns": ["name", "sum(p.goals)", "count(p.goals)"],
+        "columns": ["name", "goals", "players_with_goals"],
         "rows": [
           ["North", 49, 5],
           ["South", 27, 3]
@@ -969,9 +969,9 @@
           ]
         }
       ],
-      "answer": "SELECT e.name, m.name FROM staff e JOIN staff m ON e.manager_id = m.id",
+      "answer": "SELECT e.name AS employee, m.name AS manager FROM staff e JOIN staff m ON e.manager_id = m.id",
       "target": {
-        "columns": ["name", "name"],
+        "columns": ["employee", "manager"],
         "rows": [
           ["Bo", "Ada"],
           ["Cy", "Ada"],
@@ -1034,9 +1034,9 @@
           ]
         }
       ],
-      "answer": "SELECT customer, amount - coalesce(discount, 0) FROM orders WHERE amount - coalesce(discount, 0) >= 10",
+      "answer": "SELECT customer, amount - coalesce(discount, 0) AS final_price FROM orders WHERE amount - coalesce(discount, 0) >= 10",
       "target": {
-        "columns": ["customer", "amount - coalesce(discount, 0)"],
+        "columns": ["customer", "final_price"],
         "rows": [
           ["Ava", 10],
           ["Cleo", 15],
@@ -1082,9 +1082,9 @@
           ]
         }
       ],
-      "answer": "SELECT c.coach, count(*) / count(DISTINCT c.id) FROM classes c JOIN attendance a ON a.class_id = c.id GROUP BY c.coach",
+      "answer": "SELECT c.coach, count(*) / count(DISTINCT c.id) AS avg_people FROM classes c JOIN attendance a ON a.class_id = c.id GROUP BY c.coach",
       "target": {
-        "columns": ["coach", "count(*) / count(DISTINCT c.id)"],
+        "columns": ["coach", "avg_people"],
         "rows": [
           ["Rosa", 3],
           ["Ken", 2.5],
@@ -1112,9 +1112,9 @@
           ]
         }
       ],
-      "answer": "SELECT a.name, b.name FROM products a JOIN products b ON a.category = b.category AND a.price < b.price",
+      "answer": "SELECT a.name AS cheaper, b.name AS dearer FROM products a JOIN products b ON a.category = b.category AND a.price < b.price",
       "target": {
-        "columns": ["name", "name"],
+        "columns": ["cheaper", "dearer"],
         "rows": [
           ["Pen", "Marker"],
           ["Pencil", "Pen"],
@@ -1198,9 +1198,9 @@
           ]
         }
       ],
-      "answer": "SELECT l.product, count(DISTINCT o.customer) FROM orders o JOIN order_lines l ON l.order_id = o.id GROUP BY l.product HAVING count(DISTINCT o.customer) >= 2",
+      "answer": "SELECT l.product, count(DISTINCT o.customer) AS customers FROM orders o JOIN order_lines l ON l.order_id = o.id GROUP BY l.product HAVING count(DISTINCT o.customer) >= 2",
       "target": {
-        "columns": ["product", "count(DISTINCT o.customer)"],
+        "columns": ["product", "customers"],
         "rows": [
           ["Mug", 3],
           ["Teapot", 2],
@@ -1273,9 +1273,9 @@
           ]
         }
       ],
-      "answer": "SELECT subject, max(score), sum(score >= 80) FROM scores GROUP BY subject",
+      "answer": "SELECT subject, max(score) AS best, sum(score >= 80) AS stars FROM scores GROUP BY subject",
       "target": {
-        "columns": ["subject", "max(score)", "sum(score >= 80)"],
+        "columns": ["subject", "best", "stars"],
         "rows": [
           ["math", 91, 2],
           ["art", 95, 3]

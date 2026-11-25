@@ -82,9 +82,19 @@ export function checkPuzzleShape(p: Puzzle): string[] {
   return errs;
 }
 
-/** Runs the reference answer; also runs it on the tables with their rows reversed to catch ties that make the target depend on row order. */
+const PLAIN_NAME = /^[A-Za-z_][A-Za-z0-9_]*$/;
+
+/**
+ * Runs the reference answer; also runs it on the tables with their rows reversed to catch ties that make the target depend on row order.
+ * Target column names are shown to players, so they must be plain names: an expression such as "count(*)" would give the answer away
+ * (give computed columns an alias with AS in the reference answer).
+ */
 export function computeTarget(p: Puzzle): QueryResult {
   const target = runQuery(p.answer, p.tables);
+  const leaky = target.columns.filter((c) => !PLAIN_NAME.test(c));
+  if (leaky.length) {
+    throw new Error(`puzzle "${p.id}": target column ${JSON.stringify(leaky[0])} shows the answer's expression; add AS <name> in the answer`);
+  }
   const reversed = p.tables.map((t) => ({ ...t, rows: t.rows.slice().reverse() }));
   const again = runQuery(p.answer, reversed);
   if (!resultsMatch(again, target, p.ordered).ok) {
