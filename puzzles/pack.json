@@ -1,0 +1,1319 @@
+{
+  "version": 1,
+  "puzzles": [
+    {
+      "id": "shop-cheap-products",
+      "title": "Bargain shelf",
+      "difficulty": "easy",
+      "story": "Which products cost less than 5? Show the name and the price.",
+      "ordered": false,
+      "tables": [
+        {
+          "name": "products",
+          "columns": ["id", "name", "category", "price", "stock"],
+          "rows": [
+            [1, "Pretzels", "snacks", 3.5, 12],
+            [2, "Olive oil", "pantry", 9.9, 4],
+            [3, "Crisps", "snacks", 2.2, 0],
+            [4, "Dark chocolate", "snacks", 4.75, 8],
+            [5, "Coffee beans", "pantry", 12.5, 6],
+            [6, "Green tea", "drinks", 5.25, 0],
+            [7, "Lemonade", "drinks", 1.8, 20],
+            [8, "Rice", "pantry", 4.99, 15]
+          ]
+        }
+      ],
+      "answer": "SELECT name, price FROM products WHERE price < 5",
+      "target": {
+        "columns": ["name", "price"],
+        "rows": [
+          ["Pretzels", 3.5],
+          ["Crisps", 2.2],
+          ["Dark chocolate", 4.75],
+          ["Lemonade", 1.8],
+          ["Rice", 4.99]
+        ]
+      }
+    },
+    {
+      "id": "library-overdue-loans",
+      "title": "Overdue!",
+      "difficulty": "easy",
+      "story": "Which loans have been out for more than 14 days? Show the book title and the member.",
+      "ordered": false,
+      "tables": [
+        {
+          "name": "loans",
+          "columns": ["id", "title", "member", "days_out"],
+          "rows": [
+            [1, "Dune", "Maya", 21],
+            [2, "Emma", "Leo", 3],
+            [3, "Ulysses", "Maya", 15],
+            [4, "Beloved", "Ines", 14],
+            [5, "Hamlet", "Omar", 30],
+            [6, "Matilda", "Leo", 9]
+          ]
+        }
+      ],
+      "answer": "SELECT title, member FROM loans WHERE days_out > 14",
+      "target": {
+        "columns": ["title", "member"],
+        "rows": [
+          ["Dune", "Maya"],
+          ["Ulysses", "Maya"],
+          ["Hamlet", "Omar"]
+        ]
+      }
+    },
+    {
+      "id": "sports-top-scorers",
+      "title": "Golden boot",
+      "difficulty": "easy",
+      "story": "Who are the 3 top scorers? Show the name and goals, highest first.",
+      "ordered": true,
+      "tables": [
+        {
+          "name": "players",
+          "columns": ["name", "team", "goals"],
+          "rows": [
+            ["Rui", "Lions", 14],
+            ["Ana", "Hawks", 9],
+            ["Tom", "Lions", 17],
+            ["Kai", "Bears", 11],
+            ["Eva", "Hawks", 6],
+            ["Sam", "Bears", 12],
+            ["Lia", "Lions", 4]
+          ]
+        }
+      ],
+      "answer": "SELECT name, goals FROM players ORDER BY goals DESC LIMIT 3",
+      "target": {
+        "columns": ["name", "goals"],
+        "rows": [
+          ["Tom", 17],
+          ["Rui", 14],
+          ["Sam", 12]
+        ]
+      }
+    },
+    {
+      "id": "cafe-drinks",
+      "title": "Thirsty?",
+      "difficulty": "easy",
+      "story": "List every drink on the cafe menu with its price.",
+      "ordered": false,
+      "tables": [
+        {
+          "name": "menu",
+          "columns": ["item", "kind", "price"],
+          "rows": [
+            ["Espresso", "drink", 2.2],
+            ["Croissant", "food", 2.8],
+            ["Latte", "drink", 3.4],
+            ["Bagel", "food", 3.1],
+            ["Iced tea", "drink", 2.9],
+            ["Muffin", "food", 2.5],
+            ["Cocoa", "drink", 3]
+          ]
+        }
+      ],
+      "answer": "SELECT item, price FROM menu WHERE kind = 'drink'",
+      "target": {
+        "columns": ["item", "price"],
+        "rows": [
+          ["Espresso", 2.2],
+          ["Latte", 3.4],
+          ["Iced tea", 2.9],
+          ["Cocoa", 3]
+        ]
+      }
+    },
+    {
+      "id": "gym-missing-email",
+      "title": "Lost contact",
+      "difficulty": "easy",
+      "story": "Which gym members have no email address on file? Show their name and plan.",
+      "ordered": false,
+      "tables": [
+        {
+          "name": "members",
+          "columns": ["id", "name", "email", "plan"],
+          "rows": [
+            [1, "Ava", "ava@mail.test", "monthly"],
+            [2, "Ben", null, "yearly"],
+            [3, "Cleo", "cleo@mail.test", "yearly"],
+            [4, "Dan", null, "monthly"],
+            [5, "Eli", "eli@mail.test", "monthly"],
+            [6, "Fay", null, "day pass"]
+          ]
+        }
+      ],
+      "answer": "SELECT name, plan FROM members WHERE email IS NULL",
+      "target": {
+        "columns": ["name", "plan"],
+        "rows": [
+          ["Ben", "yearly"],
+          ["Dan", "monthly"],
+          ["Fay", "day pass"]
+        ]
+      }
+    },
+    {
+      "id": "shop-out-of-stock",
+      "title": "Empty shelves",
+      "difficulty": "easy",
+      "story": "How many items are out of stock (stock is 0)? Answer with a single number.",
+      "ordered": false,
+      "tables": [
+        {
+          "name": "inventory",
+          "columns": ["sku", "item", "stock"],
+          "rows": [
+            ["K-01", "Kettle", 4],
+            ["T-02", "Toaster", 0],
+            ["B-03", "Blender", 0],
+            ["M-04", "Mixer", 7],
+            ["F-05", "Fan", 0],
+            ["L-06", "Lamp", 2]
+          ]
+        }
+      ],
+      "answer": "SELECT count(*) FROM inventory WHERE stock = 0",
+      "target": {
+        "columns": ["count(*)"],
+        "rows": [
+          [3]
+        ]
+      }
+    },
+    {
+      "id": "library-a-authors",
+      "title": "Shelf A",
+      "difficulty": "easy",
+      "story": "Which books are by authors whose name starts with A? Show the title and the author.",
+      "ordered": false,
+      "tables": [
+        {
+          "name": "books",
+          "columns": ["title", "author", "year"],
+          "rows": [
+            ["Persuasion", "Austen", 1817],
+            ["Things Fall Apart", "Achebe", 1958],
+            ["Middlemarch", "Eliot", 1871],
+            ["Americanah", "Adichie", 2013],
+            ["Beloved", "Morrison", 1987],
+            ["The Handmaid's Tale", "Atwood", 1985],
+            ["Rebecca", "du Maurier", 1938]
+          ]
+        }
+      ],
+      "answer": "SELECT title, author FROM books WHERE author LIKE 'A%'",
+      "target": {
+        "columns": ["title", "author"],
+        "rows": [
+          ["Persuasion", "Austen"],
+          ["Things Fall Apart", "Achebe"],
+          ["Americanah", "Adichie"],
+          ["The Handmaid's Tale", "Atwood"]
+        ]
+      }
+    },
+    {
+      "id": "bakery-mid-price",
+      "title": "Pocket money",
+      "difficulty": "easy",
+      "story": "Which pastries cost from 2 to 3, both ends included? Show the name and the price.",
+      "ordered": false,
+      "tables": [
+        {
+          "name": "pastries",
+          "columns": ["name", "price"],
+          "rows": [
+            ["Eclair", 3.2],
+            ["Scone", 2],
+            ["Brownie", 2.75],
+            ["Cinnamon roll", 3],
+            ["Macaron", 1.5],
+            ["Cheesecake", 4.5],
+            ["Danish", 2.4]
+          ]
+        }
+      ],
+      "answer": "SELECT name, price FROM pastries WHERE price BETWEEN 2 AND 3",
+      "target": {
+        "columns": ["name", "price"],
+        "rows": [
+          ["Scone", 2],
+          ["Brownie", 2.75],
+          ["Cinnamon roll", 3],
+          ["Danish", 2.4]
+        ]
+      }
+    },
+    {
+      "id": "sports-teams-once",
+      "title": "Roll call",
+      "difficulty": "easy",
+      "story": "Which teams appear in the results table? List each team once.",
+      "ordered": false,
+      "tables": [
+        {
+          "name": "results",
+          "columns": ["match_day", "team", "points"],
+          "rows": [
+            [1, "Lions", 3],
+            [1, "Hawks", 0],
+            [2, "Bears", 1],
+            [2, "Lions", 1],
+            [3, "Hawks", 3],
+            [3, "Wolves", 0],
+            [4, "Bears", 3]
+          ]
+        }
+      ],
+      "answer": "SELECT DISTINCT team FROM results",
+      "target": {
+        "columns": ["team"],
+        "rows": [
+          ["Lions"],
+          ["Hawks"],
+          ["Bears"],
+          ["Wolves"]
+        ]
+      }
+    },
+    {
+      "id": "shop-line-totals",
+      "title": "Line by line",
+      "difficulty": "easy",
+      "story": "Show each order line with its line total (quantity times unit price): the order id, the product and the total.",
+      "ordered": false,
+      "tables": [
+        {
+          "name": "order_lines",
+          "columns": ["order_id", "product", "qty", "unit_price"],
+          "rows": [
+            [101, "Mug", 2, 6.5],
+            [101, "Teapot", 1, 24],
+            [102, "Spoon", 6, 1.25],
+            [103, "Mug", 1, 6.5],
+            [103, "Coaster", 4, 2]
+          ]
+        }
+      ],
+      "answer": "SELECT order_id, product, qty * unit_price FROM order_lines",
+      "target": {
+        "columns": ["order_id", "product", "qty * unit_price"],
+        "rows": [
+          [101, "Mug", 13],
+          [101, "Teapot", 24],
+          [102, "Spoon", 7.5],
+          [103, "Mug", 6.5],
+          [103, "Coaster", 8]
+        ]
+      }
+    },
+    {
+      "id": "hotel-local-guests",
+      "title": "Home crowd",
+      "difficulty": "easy",
+      "story": "Which hotel guests come from Lisbon, Porto or Faro? Show the name and the city.",
+      "ordered": false,
+      "tables": [
+        {
+          "name": "guests",
+          "columns": ["name", "city", "nights"],
+          "rows": [
+            ["Ana", "Porto", 2],
+            ["Ben", "Madrid", 1],
+            ["Carla", "Faro", 4],
+            ["Dev", "Lisbon", 3],
+            ["Elif", "Paris", 2],
+            ["Femi", "Lisbon", 1],
+            ["Gus", "Berlin", 5]
+          ]
+        }
+      ],
+      "answer": "SELECT name, city FROM guests WHERE city IN ('Lisbon', 'Porto', 'Faro')",
+      "target": {
+        "columns": ["name", "city"],
+        "rows": [
+          ["Ana", "Porto"],
+          ["Carla", "Faro"],
+          ["Dev", "Lisbon"],
+          ["Femi", "Lisbon"]
+        ]
+      }
+    },
+    {
+      "id": "cinema-recent-films",
+      "title": "Fresh reels",
+      "difficulty": "easy",
+      "story": "Which films came out after 2015? Show the title and the year, newest first.",
+      "ordered": true,
+      "tables": [
+        {
+          "name": "films",
+          "columns": ["title", "year", "minutes"],
+          "rows": [
+            ["Arrival", 2016, 116],
+            ["Coco", 2017, 105],
+            ["Up", 2009, 96],
+            ["Soul", 2020, 100],
+            ["Roma", 2018, 135],
+            ["Wall-E", 2008, 98],
+            ["Parasite", 2019, 132],
+            ["Inception", 2010, 148]
+          ]
+        }
+      ],
+      "answer": "SELECT title, year FROM films WHERE year > 2015 ORDER BY year DESC",
+      "target": {
+        "columns": ["title", "year"],
+        "rows": [
+          ["Soul", 2020],
+          ["Parasite", 2019],
+          ["Roma", 2018],
+          ["Coco", 2017],
+          ["Arrival", 2016]
+        ]
+      }
+    },
+    {
+      "id": "shop-category-counts",
+      "title": "Aisle census",
+      "difficulty": "medium",
+      "story": "How many products are in each category? Show the category and the count.",
+      "ordered": false,
+      "tables": [
+        {
+          "name": "products",
+          "columns": ["name", "category", "price"],
+          "rows": [
+            ["Pretzels", "snacks", 3.5],
+            ["Olive oil", "pantry", 9.9],
+            ["Crisps", "snacks", 2.2],
+            ["Dark chocolate", "snacks", 4.75],
+            ["Coffee beans", "pantry", 12.5],
+            ["Green tea", "drinks", 5.25],
+            ["Lemonade", "drinks", 1.8],
+            ["Rice", "pantry", 4.99],
+            ["Popcorn", "snacks", 2]
+          ]
+        }
+      ],
+      "answer": "SELECT category, count(*) FROM products GROUP BY category",
+      "target": {
+        "columns": ["category", "count(*)"],
+        "rows": [
+          ["snacks", 4],
+          ["pantry", 3],
+          ["drinks", 2]
+        ]
+      }
+    },
+    {
+      "id": "sports-team-goals",
+      "title": "Team sheet",
+      "difficulty": "medium",
+      "story": "How many goals did each team score in total? Show the team and its total, highest total first.",
+      "ordered": true,
+      "tables": [
+        {
+          "name": "players",
+          "columns": ["name", "team", "goals"],
+          "rows": [
+            ["Rui", "Lions", 14],
+            ["Ana", "Hawks", 9],
+            ["Tom", "Lions", 17],
+            ["Kai", "Bears", 11],
+            ["Eva", "Hawks", 6],
+            ["Sam", "Bears", 12],
+            ["Lia", "Lions", 4],
+            ["Ola", "Wolves", 8]
+          ]
+        }
+      ],
+      "answer": "SELECT team, sum(goals) AS total FROM players GROUP BY team ORDER BY total DESC",
+      "target": {
+        "columns": ["team", "total"],
+        "rows": [
+          ["Lions", 35],
+          ["Bears", 23],
+          ["Hawks", 15],
+          ["Wolves", 8]
+        ]
+      }
+    },
+    {
+      "id": "library-who-borrowed",
+      "title": "Who has it?",
+      "difficulty": "medium",
+      "story": "Who borrowed what? Show each member's name next to the title they borrowed.",
+      "ordered": false,
+      "tables": [
+        {
+          "name": "members",
+          "columns": ["id", "name"],
+          "rows": [
+            [1, "Maya"],
+            [2, "Leo"],
+            [3, "Ines"],
+            [4, "Omar"]
+          ]
+        },
+        {
+          "name": "loans",
+          "columns": ["member_id", "title"],
+          "rows": [
+            [1, "Dune"],
+            [2, "Emma"],
+            [1, "Ulysses"],
+            [3, "Beloved"],
+            [2, "Matilda"]
+          ]
+        }
+      ],
+      "answer": "SELECT m.name, l.title FROM members m JOIN loans l ON l.member_id = m.id",
+      "target": {
+        "columns": ["name", "title"],
+        "rows": [
+          ["Maya", "Dune"],
+          ["Maya", "Ulysses"],
+          ["Leo", "Emma"],
+          ["Leo", "Matilda"],
+          ["Ines", "Beloved"]
+        ]
+      }
+    },
+    {
+      "id": "shop-average-price",
+      "title": "Price check",
+      "difficulty": "medium",
+      "story": "What is the average price in each category, rounded to 2 decimals? Show the category and the average.",
+      "ordered": false,
+      "tables": [
+        {
+          "name": "stationery",
+          "columns": ["name", "category", "price"],
+          "rows": [
+            ["Notebook", "paper", 3.5],
+            ["Pen", "writing", 1.2],
+            ["Pencil", "writing", 0.8],
+            ["Folder", "paper", 2.25],
+            ["Marker", "writing", 2.4],
+            ["Stapler", "tools", 7.99],
+            ["Envelope", "paper", 0.6],
+            ["Scissors", "tools", 4.5]
+          ]
+        }
+      ],
+      "answer": "SELECT category, round(avg(price), 2) FROM stationery GROUP BY category",
+      "target": {
+        "columns": ["category", "round(avg(price), 2)"],
+        "rows": [
+          ["paper", 2.12],
+          ["writing", 1.47],
+          ["tools", 6.25]
+        ]
+      }
+    },
+    {
+      "id": "cafe-busy-days",
+      "title": "Rush hour",
+      "difficulty": "medium",
+      "story": "On which days did the cafe sell more than 20 items in total? Show the day and the number of items sold.",
+      "ordered": false,
+      "tables": [
+        {
+          "name": "sales",
+          "columns": ["day", "item", "qty"],
+          "rows": [
+            ["Mon", "Latte", 8],
+            ["Mon", "Bagel", 5],
+            ["Tue", "Latte", 12],
+            ["Tue", "Muffin", 11],
+            ["Wed", "Espresso", 6],
+            ["Thu", "Latte", 9],
+            ["Thu", "Cocoa", 7],
+            ["Thu", "Bagel", 6],
+            ["Fri", "Latte", 15],
+            ["Fri", "Croissant", 4]
+          ]
+        }
+      ],
+      "answer": "SELECT day, sum(qty) FROM sales GROUP BY day HAVING sum(qty) > 20",
+      "target": {
+        "columns": ["day", "sum(qty)"],
+        "rows": [
+          ["Tue", 23],
+          ["Thu", 22]
+        ]
+      }
+    },
+    {
+      "id": "gym-class-headcount",
+      "title": "Full house",
+      "difficulty": "medium",
+      "story": "How many people came to each class? Show the class name and the head count. Classes nobody came to can be left out.",
+      "ordered": false,
+      "tables": [
+        {
+          "name": "classes",
+          "columns": ["id", "name", "coach"],
+          "rows": [
+            [1, "Spin", "Rosa"],
+            [2, "Yoga", "Ken"],
+            [3, "Boxing", "Rosa"],
+            [4, "Pilates", "Mia"]
+          ]
+        },
+        {
+          "name": "attendance",
+          "columns": ["class_id", "member"],
+          "rows": [
+            [1, "Ava"],
+            [1, "Ben"],
+            [2, "Ava"],
+            [1, "Cleo"],
+            [3, "Dan"],
+            [2, "Eli"],
+            [1, "Fay"],
+            [3, "Ben"]
+          ]
+        }
+      ],
+      "answer": "SELECT c.name, count(*) FROM classes c JOIN attendance a ON a.class_id = c.id GROUP BY c.name",
+      "target": {
+        "columns": ["name", "count(*)"],
+        "rows": [
+          ["Spin", 4],
+          ["Yoga", 2],
+          ["Boxing", 2]
+        ]
+      }
+    },
+    {
+      "id": "office-top-salary",
+      "title": "Top of the payroll",
+      "difficulty": "medium",
+      "story": "What is the highest salary in each department? Show the department and that salary.",
+      "ordered": false,
+      "tables": [
+        {
+          "name": "employees",
+          "columns": ["name", "dept", "salary"],
+          "rows": [
+            ["Ada", "IT", 5200],
+            ["Bo", "Sales", 3900],
+            ["Cy", "IT", 6100],
+            ["Di", "HR", 4100],
+            ["Ed", "Sales", 4400],
+            ["Flo", "HR", 3800],
+            ["Gil", "IT", 4700]
+          ]
+        }
+      ],
+      "answer": "SELECT dept, max(salary) FROM employees GROUP BY dept",
+      "target": {
+        "columns": ["dept", "max(salary)"],
+        "rows": [
+          ["IT", 6100],
+          ["Sales", 4400],
+          ["HR", 4100]
+        ]
+      }
+    },
+    {
+      "id": "shop-regulars",
+      "title": "The regulars",
+      "difficulty": "medium",
+      "story": "Which customers ordered more than twice? Show their names.",
+      "ordered": false,
+      "tables": [
+        {
+          "name": "customers",
+          "columns": ["id", "name"],
+          "rows": [
+            [1, "Nora"],
+            [2, "Omar"],
+            [3, "Pia"],
+            [4, "Quinn"],
+            [5, "Rex"]
+          ]
+        },
+        {
+          "name": "orders",
+          "columns": ["id", "customer_id", "total"],
+          "rows": [
+            [1, 1, 20],
+            [2, 2, 35],
+            [3, 1, 12],
+            [4, 3, 8],
+            [5, 1, 40],
+            [6, 2, 15],
+            [7, 2, 9],
+            [8, 4, 60],
+            [9, 3, 22]
+          ]
+        }
+      ],
+      "answer": "SELECT c.name FROM customers c JOIN orders o ON o.customer_id = c.id GROUP BY c.name HAVING count(*) > 2",
+      "target": {
+        "columns": ["name"],
+        "rows": [
+          ["Nora"],
+          ["Omar"]
+        ]
+      }
+    },
+    {
+      "id": "library-decades",
+      "title": "Decade by decade",
+      "difficulty": "medium",
+      "story": "How many books came out in each decade? Show the decade (like 1930) and the count, earliest decade first.",
+      "ordered": true,
+      "tables": [
+        {
+          "name": "books",
+          "columns": ["title", "year"],
+          "rows": [
+            ["Rebecca", 1938],
+            ["The Hobbit", 1937],
+            ["Dune", 1965],
+            ["Solaris", 1961],
+            ["Neuromancer", 1984],
+            ["Beloved", 1987],
+            ["Matilda", 1988],
+            ["Possession", 1990]
+          ]
+        }
+      ],
+      "answer": "SELECT year - year % 10 AS decade, count(*) FROM books GROUP BY year - year % 10 ORDER BY decade",
+      "target": {
+        "columns": ["decade", "count(*)"],
+        "rows": [
+          [1930, 2],
+          [1960, 2],
+          [1980, 3],
+          [1990, 1]
+        ]
+      }
+    },
+    {
+      "id": "sports-home-wins",
+      "title": "Fortress",
+      "difficulty": "medium",
+      "story": "In which matches did the home team win? Show the home team, the away team and the winning margin in goals.",
+      "ordered": false,
+      "tables": [
+        {
+          "name": "matches",
+          "columns": ["home", "away", "home_goals", "away_goals"],
+          "rows": [
+            ["Lions", "Hawks", 3, 1],
+            ["Bears", "Wolves", 0, 0],
+            ["Hawks", "Bears", 2, 2],
+            ["Wolves", "Lions", 1, 4],
+            ["Lions", "Bears", 2, 1],
+            ["Hawks", "Wolves", 5, 0],
+            ["Bears", "Lions", 1, 3]
+          ]
+        }
+      ],
+      "answer": "SELECT home, away, home_goals - away_goals FROM matches WHERE home_goals > away_goals",
+      "target": {
+        "columns": ["home", "away", "home_goals - away_goals"],
+        "rows": [
+          ["Lions", "Hawks", 2],
+          ["Lions", "Bears", 1],
+          ["Hawks", "Wolves", 5]
+        ]
+      }
+    },
+    {
+      "id": "shop-long-names",
+      "title": "Name tags",
+      "difficulty": "medium",
+      "story": "Which customers have names longer than 5 letters? Show the name in capital letters and its length.",
+      "ordered": false,
+      "tables": [
+        {
+          "name": "customers",
+          "columns": ["id", "name", "country"],
+          "rows": [
+            [1, "Nora", "NO"],
+            [2, "Bartholomew", "UK"],
+            [3, "Pia", "IT"],
+            [4, "Quentin", "FR"],
+            [5, "Ximena", "MX"],
+            [6, "Lu", "CN"]
+          ]
+        }
+      ],
+      "answer": "SELECT upper(name), length(name) FROM customers WHERE length(name) > 5",
+      "target": {
+        "columns": ["upper(name)", "length(name)"],
+        "rows": [
+          ["BARTHOLOMEW", 11],
+          ["QUENTIN", 7],
+          ["XIMENA", 6]
+        ]
+      }
+    },
+    {
+      "id": "bakery-best-sellers",
+      "title": "Bread winners",
+      "difficulty": "medium",
+      "story": "How much did each pastry earn (quantity times price each)? Show the item and its revenue, biggest earner first.",
+      "ordered": true,
+      "tables": [
+        {
+          "name": "sales",
+          "columns": ["item", "qty", "price_each"],
+          "rows": [
+            ["Eclair", 14, 3.25],
+            ["Scone", 30, 2],
+            ["Brownie", 22, 2.75],
+            ["Cinnamon roll", 18, 3],
+            ["Macaron", 42, 1.5],
+            ["Danish", 9, 2.5]
+          ]
+        }
+      ],
+      "answer": "SELECT item, qty * price_each AS revenue FROM sales ORDER BY revenue DESC",
+      "target": {
+        "columns": ["item", "revenue"],
+        "rows": [
+          ["Macaron", 63],
+          ["Brownie", 60.5],
+          ["Scone", 60],
+          ["Cinnamon roll", 54],
+          ["Eclair", 45.5],
+          ["Danish", 22.5]
+        ]
+      }
+    },
+    {
+      "id": "shop-big-spenders",
+      "title": "Big spenders",
+      "difficulty": "hard",
+      "story": "How much has each customer spent in total (quantity times unit price, over all their orders)? Show the name and the total, biggest spender first.",
+      "ordered": true,
+      "tables": [
+        {
+          "name": "customers",
+          "columns": ["id", "name"],
+          "rows": [
+            [1, "Nora"],
+            [2, "Omar"],
+            [3, "Pia"],
+            [4, "Quinn"]
+          ]
+        },
+        {
+          "name": "orders",
+          "columns": ["id", "customer_id", "day"],
+          "rows": [
+            [100, 1, "Mon"],
+            [101, 2, "Mon"],
+            [102, 1, "Wed"],
+            [103, 3, "Thu"],
+            [104, 2, "Fri"]
+          ]
+        },
+        {
+          "name": "order_lines",
+          "columns": ["order_id", "product", "qty", "unit_price"],
+          "rows": [
+            [100, "Mug", 2, 6.5],
+            [100, "Teapot", 1, 24],
+            [101, "Spoon", 6, 1.25],
+            [102, "Mug", 1, 6.5],
+            [103, "Coaster", 4, 2],
+            [103, "Teapot", 2, 24],
+            [104, "Mug", 3, 6.5]
+          ]
+        }
+      ],
+      "answer": "SELECT c.name, sum(l.qty * l.unit_price) AS spent FROM customers c JOIN orders o ON o.customer_id = c.id JOIN order_lines l ON l.order_id = o.id GROUP BY c.name ORDER BY spent DESC",
+      "target": {
+        "columns": ["name", "spent"],
+        "rows": [
+          ["Pia", 56],
+          ["Nora", 43.5],
+          ["Omar", 27]
+        ]
+      }
+    },
+    {
+      "id": "library-wide-readers",
+      "title": "Wide readers",
+      "difficulty": "hard",
+      "story": "Which members have borrowed books by more than one different author? Show the member's name and how many different authors.",
+      "ordered": false,
+      "tables": [
+        {
+          "name": "members",
+          "columns": ["id", "name"],
+          "rows": [
+            [1, "Maya"],
+            [2, "Leo"],
+            [3, "Ines"],
+            [4, "Omar"]
+          ]
+        },
+        {
+          "name": "books",
+          "columns": ["id", "title", "author"],
+          "rows": [
+            [1, "Emma", "Austen"],
+            [2, "Persuasion", "Austen"],
+            [3, "Dune", "Herbert"],
+            [4, "Beloved", "Morrison"],
+            [5, "Jazz", "Morrison"]
+          ]
+        },
+        {
+          "name": "loans",
+          "columns": ["member_id", "book_id"],
+          "rows": [
+            [1, 1],
+            [1, 2],
+            [2, 3],
+            [2, 1],
+            [3, 4],
+            [3, 5],
+            [4, 2],
+            [1, 3]
+          ]
+        }
+      ],
+      "answer": "SELECT m.name, count(DISTINCT b.author) FROM members m JOIN loans l ON l.member_id = m.id JOIN books b ON b.id = l.book_id GROUP BY m.name HAVING count(DISTINCT b.author) > 1",
+      "target": {
+        "columns": ["name", "count(DISTINCT b.author)"],
+        "rows": [
+          ["Maya", 2],
+          ["Leo", 2]
+        ]
+      }
+    },
+    {
+      "id": "sports-league-goals",
+      "title": "League table",
+      "difficulty": "hard",
+      "story": "For each league, show its name, the total goals of its players, and how many players have a goals figure recorded (blank ones do not count).",
+      "ordered": false,
+      "tables": [
+        {
+          "name": "leagues",
+          "columns": ["id", "name"],
+          "rows": [
+            [1, "North"],
+            [2, "South"]
+          ]
+        },
+        {
+          "name": "teams",
+          "columns": ["id", "name", "league_id"],
+          "rows": [
+            [1, "Lions", 1],
+            [2, "Hawks", 1],
+            [3, "Bears", 2],
+            [4, "Wolves", 2],
+            [5, "Foxes", 1]
+          ]
+        },
+        {
+          "name": "players",
+          "columns": ["name", "team_id", "goals"],
+          "rows": [
+            ["Rui", 1, 14],
+            ["Ana", 2, 9],
+            ["Tom", 1, 17],
+            ["Kai", 3, 11],
+            ["Eva", 2, 6],
+            ["Sam", 3, 12],
+            ["Lia", 4, 4],
+            ["Ola", 5, 3],
+            ["Ivo", 4, null]
+          ]
+        }
+      ],
+      "answer": "SELECT lg.name, sum(p.goals), count(p.goals) FROM leagues lg JOIN teams t ON t.league_id = lg.id JOIN players p ON p.team_id = t.id GROUP BY lg.name",
+      "target": {
+        "columns": ["name", "sum(p.goals)", "count(p.goals)"],
+        "rows": [
+          ["North", 49, 5],
+          ["South", 27, 3]
+        ]
+      }
+    },
+    {
+      "id": "office-who-reports",
+      "title": "Chain of command",
+      "difficulty": "hard",
+      "story": "Show every employee who has a manager, next to their manager's name.",
+      "ordered": false,
+      "tables": [
+        {
+          "name": "staff",
+          "columns": ["id", "name", "manager_id"],
+          "rows": [
+            [1, "Ada", null],
+            [2, "Bo", 1],
+            [3, "Cy", 1],
+            [4, "Di", 2],
+            [5, "Ed", 2],
+            [6, "Flo", 3]
+          ]
+        }
+      ],
+      "answer": "SELECT e.name, m.name FROM staff e JOIN staff m ON e.manager_id = m.id",
+      "target": {
+        "columns": ["name", "name"],
+        "rows": [
+          ["Bo", "Ada"],
+          ["Cy", "Ada"],
+          ["Di", "Bo"],
+          ["Ed", "Bo"],
+          ["Flo", "Cy"]
+        ]
+      }
+    },
+    {
+      "id": "shop-second-page",
+      "title": "Page two",
+      "difficulty": "hard",
+      "story": "Rank the products by price, most expensive first, and alphabetically when prices are equal. Show the products in places 4 to 6 (name and price).",
+      "ordered": true,
+      "tables": [
+        {
+          "name": "products",
+          "columns": ["name", "price"],
+          "rows": [
+            ["Kettle", 29],
+            ["Toaster", 35],
+            ["Blender", 49],
+            ["Mixer", 89],
+            ["Fan", 35],
+            ["Lamp", 19],
+            ["Heater", 49],
+            ["Radio", 25],
+            ["Clock", 15]
+          ]
+        }
+      ],
+      "answer": "SELECT name, price FROM products ORDER BY price DESC, name LIMIT 3 OFFSET 3",
+      "target": {
+        "columns": ["name", "price"],
+        "rows": [
+          ["Fan", 35],
+          ["Toaster", 35],
+          ["Kettle", 29]
+        ]
+      }
+    },
+    {
+      "id": "cafe-final-price",
+      "title": "After discounts",
+      "difficulty": "hard",
+      "story": "The final price is the amount minus the discount, and a missing discount means no discount. Which orders have a final price of at least 10? Show the customer and the final price.",
+      "ordered": false,
+      "tables": [
+        {
+          "name": "orders",
+          "columns": ["id", "customer", "amount", "discount"],
+          "rows": [
+            [1, "Ava", 12, 2],
+            [2, "Ben", 9, null],
+            [3, "Cleo", 15, null],
+            [4, "Dan", 11, 3],
+            [5, "Eli", 30, 25],
+            [6, "Fay", 10, null]
+          ]
+        }
+      ],
+      "answer": "SELECT customer, amount - coalesce(discount, 0) FROM orders WHERE amount - coalesce(discount, 0) >= 10",
+      "target": {
+        "columns": ["customer", "amount - coalesce(discount, 0)"],
+        "rows": [
+          ["Ava", 10],
+          ["Cleo", 15],
+          ["Fay", 10]
+        ]
+      }
+    },
+    {
+      "id": "gym-coach-turnout",
+      "title": "Crowd pleaser",
+      "difficulty": "hard",
+      "story": "For each coach, what is the average number of people per class they teach? Only count classes someone came to. Show the coach and the average.",
+      "ordered": false,
+      "tables": [
+        {
+          "name": "classes",
+          "columns": ["id", "name", "coach"],
+          "rows": [
+            [1, "Spin", "Rosa"],
+            [2, "Yoga", "Ken"],
+            [3, "Boxing", "Rosa"],
+            [4, "Pilates", "Ken"],
+            [5, "HIIT", "Mia"],
+            [6, "Zumba", "Mia"]
+          ]
+        },
+        {
+          "name": "attendance",
+          "columns": ["class_id", "member"],
+          "rows": [
+            [1, "Ava"],
+            [1, "Ben"],
+            [1, "Cleo"],
+            [3, "Dan"],
+            [2, "Eli"],
+            [2, "Fay"],
+            [4, "Ava"],
+            [1, "Gus"],
+            [3, "Ben"],
+            [5, "Cleo"],
+            [4, "Hal"],
+            [4, "Ivy"]
+          ]
+        }
+      ],
+      "answer": "SELECT c.coach, count(*) / count(DISTINCT c.id) FROM classes c JOIN attendance a ON a.class_id = c.id GROUP BY c.coach",
+      "target": {
+        "columns": ["coach", "count(*) / count(DISTINCT c.id)"],
+        "rows": [
+          ["Rosa", 3],
+          ["Ken", 2.5],
+          ["Mia", 1]
+        ]
+      }
+    },
+    {
+      "id": "shop-price-pairs",
+      "title": "Cheaper than",
+      "difficulty": "hard",
+      "story": "List every pair of products in the same category where the first is cheaper than the second. Show the cheaper product's name, then the dearer one's.",
+      "ordered": false,
+      "tables": [
+        {
+          "name": "products",
+          "columns": ["name", "category", "price"],
+          "rows": [
+            ["Pen", "writing", 1.2],
+            ["Pencil", "writing", 0.8],
+            ["Marker", "writing", 2.4],
+            ["Folder", "paper", 2.25],
+            ["Notebook", "paper", 3.5],
+            ["Stapler", "tools", 7.99]
+          ]
+        }
+      ],
+      "answer": "SELECT a.name, b.name FROM products a JOIN products b ON a.category = b.category AND a.price < b.price",
+      "target": {
+        "columns": ["name", "name"],
+        "rows": [
+          ["Pen", "Marker"],
+          ["Pencil", "Pen"],
+          ["Pencil", "Marker"],
+          ["Folder", "Notebook"]
+        ]
+      }
+    },
+    {
+      "id": "library-late-fees",
+      "title": "Pay up",
+      "difficulty": "hard",
+      "story": "The late fee is 0.5 for every day a loan is out beyond 14 days. Which members owe at least 2 in total? Show the name and the fee, highest fee first.",
+      "ordered": true,
+      "tables": [
+        {
+          "name": "members",
+          "columns": ["id", "name"],
+          "rows": [
+            [1, "Maya"],
+            [2, "Leo"],
+            [3, "Ines"],
+            [4, "Omar"]
+          ]
+        },
+        {
+          "name": "loans",
+          "columns": ["member_id", "title", "days_out"],
+          "rows": [
+            [1, "Dune", 21],
+            [2, "Emma", 3],
+            [1, "Ulysses", 30],
+            [3, "Beloved", 16],
+            [4, "Hamlet", 40],
+            [2, "Matilda", 18],
+            [3, "Jazz", 14]
+          ]
+        }
+      ],
+      "answer": "SELECT m.name, sum((l.days_out - 14) * 0.5) AS fee FROM members m JOIN loans l ON l.member_id = m.id WHERE l.days_out > 14 GROUP BY m.name HAVING sum((l.days_out - 14) * 0.5) >= 2 ORDER BY fee DESC",
+      "target": {
+        "columns": ["name", "fee"],
+        "rows": [
+          ["Omar", 13],
+          ["Maya", 11.5],
+          ["Leo", 2]
+        ]
+      }
+    },
+    {
+      "id": "shop-crowd-favourites",
+      "title": "Crowd favourites",
+      "difficulty": "hard",
+      "story": "For each product, how many different customers bought it? Only show products bought by at least 2 different customers.",
+      "ordered": false,
+      "tables": [
+        {
+          "name": "orders",
+          "columns": ["id", "customer"],
+          "rows": [
+            [1, "Nora"],
+            [2, "Omar"],
+            [3, "Nora"],
+            [4, "Pia"],
+            [5, "Quinn"]
+          ]
+        },
+        {
+          "name": "order_lines",
+          "columns": ["order_id", "product"],
+          "rows": [
+            [1, "Mug"],
+            [1, "Teapot"],
+            [2, "Mug"],
+            [3, "Mug"],
+            [3, "Spoon"],
+            [4, "Teapot"],
+            [4, "Mug"],
+            [5, "Spoon"],
+            [2, "Coaster"]
+          ]
+        }
+      ],
+      "answer": "SELECT l.product, count(DISTINCT o.customer) FROM orders o JOIN order_lines l ON l.order_id = o.id GROUP BY l.product HAVING count(DISTINCT o.customer) >= 2",
+      "target": {
+        "columns": ["product", "count(DISTINCT o.customer)"],
+        "rows": [
+          ["Mug", 3],
+          ["Teapot", 2],
+          ["Spoon", 2]
+        ]
+      }
+    },
+    {
+      "id": "hotel-room-revenue",
+      "title": "Room service",
+      "difficulty": "hard",
+      "story": "How much did each kind of room earn (nights times the room's rate)? Show the kind and the revenue, highest first.",
+      "ordered": true,
+      "tables": [
+        {
+          "name": "rooms",
+          "columns": ["number", "kind", "rate"],
+          "rows": [
+            [101, "single", 60],
+            [102, "double", 90],
+            [201, "double", 95],
+            [202, "suite", 180],
+            [301, "single", 65]
+          ]
+        },
+        {
+          "name": "bookings",
+          "columns": ["guest", "room", "nights"],
+          "rows": [
+            ["Ana", 101, 2],
+            ["Ben", 102, 3],
+            ["Carla", 202, 1],
+            ["Dev", 201, 2],
+            ["Elif", 101, 1],
+            ["Femi", 301, 4]
+          ]
+        }
+      ],
+      "answer": "SELECT r.kind, sum(b.nights * r.rate) AS revenue FROM rooms r JOIN bookings b ON b.room = r.number GROUP BY r.kind ORDER BY revenue DESC",
+      "target": {
+        "columns": ["kind", "revenue"],
+        "rows": [
+          ["double", 460],
+          ["single", 440],
+          ["suite", 180]
+        ]
+      }
+    },
+    {
+      "id": "school-subject-stars",
+      "title": "Honour roll",
+      "difficulty": "hard",
+      "story": "For each subject, show the best score and how many students scored 80 or more. A missing score does not count. (Remember: a comparison gives 1 or 0.)",
+      "ordered": false,
+      "tables": [
+        {
+          "name": "scores",
+          "columns": ["student", "subject", "score"],
+          "rows": [
+            ["Ana", "math", 91],
+            ["Ben", "math", 78],
+            ["Cy", "math", 85],
+            ["Di", "math", 62],
+            ["Eve", "math", 79],
+            ["Ana", "art", 70],
+            ["Ben", "art", 88],
+            ["Cy", "art", 95],
+            ["Di", "art", 81],
+            ["Eve", "art", null]
+          ]
+        }
+      ],
+      "answer": "SELECT subject, max(score), sum(score >= 80) FROM scores GROUP BY subject",
+      "target": {
+        "columns": ["subject", "max(score)", "sum(score >= 80)"],
+        "rows": [
+          ["math", 91, 2],
+          ["art", 95, 3]
+        ]
+      }
+    },
+    {
+      "id": "shop-uncategorised",
+      "title": "Odds and ends",
+      "difficulty": "hard",
+      "story": "Which products are not in the books or toys categories? Products with no category count too. Show their names.",
+      "ordered": false,
+      "tables": [
+        {
+          "name": "products",
+          "columns": ["name", "category"],
+          "rows": [
+            ["Atlas", "books"],
+            ["Kite", "toys"],
+            ["Lamp", null],
+            ["Puzzle", "toys"],
+            ["Novel", "books"],
+            ["Mug", "kitchen"],
+            ["Gift card", null],
+            ["Pan", "kitchen"]
+          ]
+        }
+      ],
+      "answer": "SELECT name FROM products WHERE category NOT IN ('books', 'toys') OR category IS NULL",
+      "target": {
+        "columns": ["name"],
+        "rows": [
+          ["Lamp"],
+          ["Mug"],
+          ["Gift card"],
+          ["Pan"]
+        ]
+      }
+    }
+  ]
+}
